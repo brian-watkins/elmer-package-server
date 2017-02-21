@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -x
+set -xe
 
 VERSION=0.1
 LINUX_BIN=elmer-package-${VERSION}-linux.zip

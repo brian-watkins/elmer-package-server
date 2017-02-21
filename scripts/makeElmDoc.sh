@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -x
+set -xe
 
 ELMER_DIR=${1}
 ELMER_PACKAGE_SERVER_PUBLIC_DIR=./app/public
