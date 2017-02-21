@@ -4,6 +4,7 @@
 ### Build documentation
 
 Install:
++ Python > 3.6.0
 + `brew install yarn`
 + `brew install libmagic`
 
