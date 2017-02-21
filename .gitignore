@@ -1,0 +1,9 @@
+node_modules
+linux-bin
+macos-bin
+elm-doc
+macos-tmp
+sample
+downloads
+elm-package
+elm-compiler

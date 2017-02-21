@@ -1,0 +1,5 @@
+---
+applications:
+- name: elmer-package-server
+  host: elmer-test
+  memory: 128M

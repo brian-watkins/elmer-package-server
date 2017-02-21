@@ -1,0 +1,483 @@
+[
+  {
+    "name": "Elmer.Http.Matchers",
+    "comment": " Make expectations about Http requests sent by the component under test.\n\nThese matchers should be used with `Elmer.Http.expectGET` etc.\n\nNote: Your test must use `Elmer.Http.serve` or `Elmer.Http.spy` at the\nappropriate time to allow Elmer to record the requests sent by the component\nunder test.\n\n# Matchers\n@docs hasBeenRequested, hasAnyBody, hasBody, hasQueryParam, hasHeader\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "hasAnyBody",
+        "comment": " Match any request that has a body.\n",
+        "type": "Elmer.Matcher Elmer.Http.HttpRequestData"
+      },
+      {
+        "name": "hasBeenRequested",
+        "comment": " Match any request with the proper method and route as specified in\n`Elmer.Http.expectGET` etc.\n\n    expectGET \"http://fake.com/fake\" hasBeenRequested\n\n",
+        "type": "Elmer.Matcher Elmer.Http.HttpRequestData"
+      },
+      {
+        "name": "hasBody",
+        "comment": " Match a request with the specified body.\n\n    expectPOST \"http://fake.com/fake\" (\n      hasBody \"{\\\"name\\\":\\\"Fun Person\\\"}\"\n    )\n\n",
+        "type": "String -> Elmer.Matcher Elmer.Http.HttpRequestData"
+      },
+      {
+        "name": "hasHeader",
+        "comment": " Match a request with the specified header name and value.\n\n    expectGET \"http://fake.com/fake\" (\n      hasHeader ( \"x-auth-token\", \"xxxxx\" )\n    )\n\n",
+        "type": "( String, String ) -> Elmer.Matcher Elmer.Http.HttpRequestData"
+      },
+      {
+        "name": "hasQueryParam",
+        "comment": " Match a request that has a query string containing the specified name and value.\n\nNote: You don't need to worry about url encoding the name or value.\n\n    expectGET \"http://fake.com/fake\" (\n      hasQueryParam ( \"name\", \"Fun Person\" )\n    )\n\n",
+        "type": "( String, String ) -> Elmer.Matcher Elmer.Http.HttpRequestData"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Http.Stub",
+    "comment": " Functions for building stubbed responses to Http requests.\n\n# Specify the Method and Route\n@docs get, post, delete\n\n# Describe the Response body\n@docs withBody\n\n# Describe the Response Status\n@docs withStatus, withError\n\n# Defer the Response\n@docs deferResponse\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "deferResponse",
+        "comment": " Defer a response.\n\nThe response will not be processed until `Elmer.Platform.Command.resolveDeferred` is called.\n",
+        "type": "Elmer.Http.HttpResponseStub -> Elmer.Http.HttpResponseStub"
+      },
+      {
+        "name": "delete",
+        "comment": " Stub the response to a DELETE request at the specified route.\n\nBy default, this response will return an empty body with a status of\n`200 OK`.\n\nNote: The route should not contain a query string.\n",
+        "type": "String -> Elmer.Http.HttpResponseStub"
+      },
+      {
+        "name": "get",
+        "comment": " Stub the response to a GET request at the specified route.\n\nBy default, this response will return an empty body with a status of\n`200 OK`.\n\nNote: The route should not contain a query string.\n",
+        "type": "String -> Elmer.Http.HttpResponseStub"
+      },
+      {
+        "name": "post",
+        "comment": " Stub the response to a POST request at the specified route.\n\nBy default, this response will return an empty body with a status of\n`200 OK`.\n\nNote: The route should not contain a query string.\n",
+        "type": "String -> Elmer.Http.HttpResponseStub"
+      },
+      {
+        "name": "withBody",
+        "comment": " Build a response stub that returns the specified string as its body.\n\nSuppose you want to describe the behavior that results when a response body is\nparsed. You could create a stub like so:\n\n    post \"http://fake.com/fake\"\n      |> withBody \"{\\\"name\\\":\\\"Fun Person\\\"}\"\n\n",
+        "type": "String -> Elmer.Http.HttpResponseStub -> Elmer.Http.HttpResponseStub"
+      },
+      {
+        "name": "withError",
+        "comment": " Build a response stub that results in an `Http.Error`.\n\nSuppose you want to describe the behavior that should result when a request\ntimes out. You could create a stubbed response like so:\n\n    get \"http://fake.com/fake\"\n      |> withError Http.Error.Timout\n\n",
+        "type": "Http.Error -> Elmer.Http.HttpResponseStub -> Elmer.Http.HttpResponseStub"
+      },
+      {
+        "name": "withStatus",
+        "comment": " Build a response stub that returns some particular status.\n\nSuppose you want to describe the behavior that should result when a request\nreturns a `500 Internal Server Error`. You could create a stubbed response like so:\n\n    get \"http://fake.com/fake\"\n      |> withStatus Elmer.Http.Status.serverError\n\n",
+        "type": "Elmer.Http.Internal.HttpStatus -> Elmer.Http.HttpResponseStub -> Elmer.Http.HttpResponseStub"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Http",
+    "comment": " Functions for handling Http requests in your tests.\n\nYour component makes Http requests. You want to describe the behavior of your\ncomponent. What to do?\n\n1. Create an HttpResponseStub -- see `Elmer.Http.Stub`\n\n2. Serve it up during your test\n\n3. Smile!\n\n# Serve Stubbed Responses\n@docs HttpResponseStub, serve, spy\n\n# Make Expectations about Http Requests\n@docs HttpRequestData, expectGET, expectPOST, expectDELETE, clearRequestHistory\n\n",
+    "aliases": [
+      {
+        "name": "HttpRequestData",
+        "comment": " Represents a recorded request about which expectations may be made.\n",
+        "args": [],
+        "type": "Elmer.Http.Internal.HttpRequestData"
+      },
+      {
+        "name": "HttpResponseStub",
+        "comment": " Represents a stubbed HttpResponse\n\nUse `Elmer.Http.Stub` to build an `HttpResponseStub`.\n",
+        "args": [],
+        "type": "Elmer.Http.Internal.HttpResponseStub"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "clearRequestHistory",
+        "comment": " Clear any Http requests that may have been recorded at an earlier point\nin the history of this ComponentState.\n",
+        "type": "Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "expectDELETE",
+        "comment": " Expect a matching DELETE request to the specified url.\n\nThe path argument is just the url you expect (relative or absolute) up to but not\nincluding the query string. See `Elmer.Http.Matchers` for request matchers.\n\nNote: This requires the use of `Elmer.Http.serve` or `Elmer.Http.spy`.\n",
+        "type": "String -> Elmer.Matcher Elmer.Http.HttpRequestData -> Elmer.Matcher (Elmer.ComponentState model msg)"
+      },
+      {
+        "name": "expectGET",
+        "comment": " Expect a matching GET request to the specified url.\n\nThe path argument is just the url you expect (relative or absolute) up to but not\nincluding the query string. See `Elmer.Http.Matchers` for request matchers.\n\nNote: This requires the use of `Elmer.Http.serve` or `Elmer.Http.spy`.\n",
+        "type": "String -> Elmer.Matcher Elmer.Http.HttpRequestData -> Elmer.Matcher (Elmer.ComponentState model msg)"
+      },
+      {
+        "name": "expectPOST",
+        "comment": " Expect a matching POST request to the specified url.\n\nThe path argument is just the url you expect (relative or absolute) up to but not\nincluding the query string. See `Elmer.Http.Matchers` for request matchers.\n\nNote: This requires the use of `Elmer.Http.serve` or `Elmer.Http.spy`.\n",
+        "type": "String -> Elmer.Matcher Elmer.Http.HttpRequestData -> Elmer.Matcher (Elmer.ComponentState model msg)"
+      },
+      {
+        "name": "serve",
+        "comment": " Override `Http.send` and register HttpResponseStubs to be returned\nwhen the appropriate request is received. Used in conjunction with\n`Elmer.Platform.Command.use`.\n\nSuppose you have a component that requests information about a user when\na button is clicked. You could register a stub for that request like so\n\n    let\n      stubbedResponse = Elmer.Http.Stub.post \"http://fun.com/user\"\n        |> Elmer.Http.Stub.withBody\n          \"{\\\"name\\\":\\\"Super User\\\",\\\"type\\\":\\\"admin\\\"}\"\n    in\n      componentState\n        |> Markup.find \"#request-data-button\"\n        |> Elmer.Platform.Command.use [ serve [ stubbedResponse ] ] click\n        |> Markup.find \"#data-result\"\n        |> Markup.expectElement (Matchers.hasText \"Hello, Super User!\")\n\n",
+        "type": "List Elmer.Http.HttpResponseStub -> Elmer.PlatformOverride"
+      },
+      {
+        "name": "spy",
+        "comment": " Override `Http.send` and record requests as they are received.\nUsed in conjunction with `Elmer.Platform.Command.use`.\n\nSuppose you simply want to make an expectation about a request without\ndescribing the behavior that results when its response is received.\n\n    componentState\n      |> Markup.find \"#request-data-button\"\n      |> Elmer.Platform.Command.use [ spy ] click\n      |> expectGET \"http://fun.com/user\" Elmer.Http.Matchers.hasBeenRequested\n\n",
+        "type": "Elmer.PlatformOverride"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Platform.Subscription",
+    "comment": " Functions for dealing with subscriptions during your test.\n\nElmer allows you to manage the effects of subscriptions yourself, so you can\ndescribe the behavior of a component under whatever conditions you need.\n\nTo manage the effects of a subscription, you'll need to do three things.\n\n1. Override the function in your code that produces the subscription and replace\nit with a function that returns a subscription spy.\n\n2. Send data for that subscription to your component.\n\n3. Enjoy.\n\nNote: Elmer supports `Platform.Sub.batch` and `Platform.Sub.map` so you can use these in your\ncomponent as expected.\n\n# Override a Subscription\n@docs spy, override, use\n\n# Send Data for a Subscription\n@docs send\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "override",
+        "comment": " Override a function that generates a subscription.\n\nThe first argument is a function that simply returns the function you want to\noverride. The second argument is a function with the same signature as the function\nto override. It should return a subscription spy, so that Elmer will know what to do.\n\nNote: This function merely creates a description of the override; the function\nis not actually overridden until you call `Subscription.use`.\n\nYou could override `Time.every` with a subscription spy like so:\n\n    override (\\_ -> Time.every) (\\interval tagger ->\n      spy \"everyTimeInterval\" tagger\n    )\n\n",
+        "type": "(() -> a) -> (b -> c) -> Elmer.PlatformOverride"
+      },
+      {
+        "name": "send",
+        "comment": " Send data on behalf of the identified subscription.\n\nData sent via this function will be tagged accordingly and passed to\nthe component's `update` function for processing.\n",
+        "type": "String -> a -> Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "spy",
+        "comment": " Generate a fake subscription with an identifier and the appropriate tagger.\n\nOnce a spy is registered via the `use` function, you can\n`send` data on behalf of the subscription during your test.\n",
+        "type": "String -> (a -> msg) -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "use",
+        "comment": " Register subscription spies for use during your test, given the list of\noverrides and a function that produces the component's subscriptions.\n\nSuppose your component updates the view with the new time every second. To\nget the time every second, in your code you'll need to create a `subscriptions`\nfunction that returns `Time.every Time.second <tagger>`. To describe this behavior in your test, you\ncould do the following:\n\n    let\n      subOverride = override (\\_ -> Time.every) (\\interval tagger ->\n        spy \"everySecond\" tagger\n      )\n    in\n      componentState\n        |> use [ subOverride ] Component.subscriptions\n        |> send \"everySecond\" 3000\n        |> find \"#current-time\"\n        |> expectElement (hasText \"3 seconds\")\n\n",
+        "type": "List Elmer.PlatformOverride -> (model -> Platform.Sub.Sub msg) -> Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Navigation",
+    "comment": " Functions for describing the behavior of components that use\n[elm-lang/navigation](http://package.elm-lang.org/packages/elm-lang/navigation/latest/Navigation).\n\n# Create a ComponentState\n@docs navigationComponentState\n\n# Update the Location\n@docs setLocation\n\n# Make Expectations about the Location\n@docs spy, expectLocation\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "expectLocation",
+        "comment": " Expect that the current location is equal to the given string.\n\nNote: This expectation must be used in conjunction with `spy` above.\n",
+        "type": "String -> Elmer.Matcher (Elmer.ComponentState model msg)"
+      },
+      {
+        "name": "navigationComponentState",
+        "comment": " Create a `ComponentState` with a location parser function.\n\nThe location parser function is the function you would provide to\n`Navigation.program` when you initialize your app.\n",
+        "type": "model -> (model -> Html.Html msg) -> (msg -> model -> ( model, Platform.Cmd.Cmd msg )) -> (Navigation.Location -> msg) -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "setLocation",
+        "comment": " Set the location for the component.\n\nWhen the location is set and a location parser is defined for this component,\nthen the parser will be applied to the location and the resulting message\nwill be passed to the component's `update` function for processing.\n",
+        "type": "String -> Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "spy",
+        "comment": " Override `Navigation.newUrl` and `Navigation.modifyUrl` with a function that\nrecords the location as it is set.\n\nYou must use this function with `Elmer.Platform.Command.use` in order to make expectations\nabout the location. Suppose you want to test a home button that sets the\nlocation to `/home` when clicked:\n\n    componentState\n      |> Command.use [ Navigation.spy ] (\\state ->\n        find \"#home-button\" state\n          |> click\n      )\n      |> Navigation.expectLocation \"/home\"\n",
+        "type": "Elmer.PlatformOverride"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Html.Matchers",
+    "comment": " Make expectations about an Html element.\n\n@docs hasText, hasId, hasClass, hasProperty\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "hasClass",
+        "comment": " Expect that an element has the specified class. No need to prepend the class name with a dot.\n",
+        "type": "String -> Elmer.Matcher (Elmer.Html.HtmlElement msg)"
+      },
+      {
+        "name": "hasId",
+        "comment": " Expect that an element has the specified id. No need to prepend the id with a pound sign.\n",
+        "type": "String -> Elmer.Matcher (Elmer.Html.HtmlElement msg)"
+      },
+      {
+        "name": "hasProperty",
+        "comment": " Expect that an element has the specified property with the specified value.\n\n    hasProperty ( \"innerHtml\", \"Fun <i>stuff</i>\" ) node\n\n",
+        "type": "( String, String ) -> Elmer.Matcher (Elmer.Html.HtmlElement msg)"
+      },
+      {
+        "name": "hasText",
+        "comment": " Expect that an element has some text. This matcher will pass only if the element\nor any of its descendents contains some `Html.text` with the specified text.\n",
+        "type": "String -> Elmer.Matcher (Elmer.Html.HtmlElement msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Html.Element",
+    "comment": " Functions for working directly with HtmlElements.\n\n# Element Characteristics\n@docs id, classList, property, properties, attributes\n\n# Debugging\n@docs toString\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attributes",
+        "comment": " Get this element's attributes as a `Dict`. If you define a custom attribute\nfor an Html element, you can find it with this function.\n\n    componentState\n      |> expectElement (\\element ->\n        attributes element\n          |> Dict.get \"data-attribute\"\n          |> Expect.notEqual Nothing\n      )\n",
+        "type": "Elmer.Html.HtmlElement msg -> Dict.Dict String String"
+      },
+      {
+        "name": "classList",
+        "comment": " Get a list of classes applied to this element.\n",
+        "type": "Elmer.Html.HtmlElement msg -> List String"
+      },
+      {
+        "name": "id",
+        "comment": " Get the value of the element's `id` attribute, if it is defined.\n",
+        "type": "Elmer.Html.HtmlElement msg -> Maybe.Maybe String"
+      },
+      {
+        "name": "properties",
+        "comment": " Get this element's properties as a `Dict`.\n\nOn the difference between attributes and properties,\nsee [this](https://github.com/elm-lang/html/blob/master/properties-vs-attributes.md).\n",
+        "type": "Elmer.Html.HtmlElement msg -> Dict.Dict String String"
+      },
+      {
+        "name": "property",
+        "comment": " Get the value of a particular property belonging to this\nelement, if that property is defined.\n",
+        "type": "String -> Elmer.Html.HtmlElement msg -> Maybe.Maybe String"
+      },
+      {
+        "name": "toString",
+        "comment": " Represent an `HtmlElement` as a String.\n",
+        "type": "Elmer.Html.HtmlElement msg -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Html.Event",
+    "comment": " Trigger events on targeted elements. When an event occurs, Elmer will\ncall the component's `update` method with the resulting message.\n\n# Mouse Events\n@docs click, doubleClick\n\n# Form Events\n@docs input\n\n# Custom Events\n@docs on\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "click",
+        "comment": " Trigger a click event on the targeted element.\n",
+        "type": "Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "doubleClick",
+        "comment": " Trigger a double click event on the targeted element.\n",
+        "type": "Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "input",
+        "comment": " Trigger an input event on the targeted element.\n",
+        "type": "String -> Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "on",
+        "comment": " Trigger a custom event on the targeted element.\n\nThe following will trigger a `keyup` event:\n\n    componentState\n      |> on \"keyup\" \"{\\\"keyCode\\\":65}\"\n",
+        "type": "String -> String -> Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Platform.Command",
+    "comment": " Functions for dealing with commands during your tests.\n\nElmer allows you to manage the effects of commands yourself, so you can\ndescribe the behavior of a component under whatever conditions you need.\n\nTo manage the effects of a command, you'll need to do two things.\n\n1. Override the function in your code that produces the command and replace\nit with a function that returns one of the fake commands described below.\n\n2. Enjoy.\n\nNote: Elmer supports `Platform.Cmd.batch` and `Platform.Cmd.map` so you can use these in your\ncomponent as expected.\n\nNote: Elmer provides special support for commands generated by\n[elm-lang/http](http://package.elm-lang.org/packages/elm-lang/http/latest)\nand [elm-lang/navigation](http://package.elm-lang.org/packages/elm-lang/navigation/latest/Navigation)\n-- See `Elmer.Http` and `Elmer.Navigation`, respectively.\n\n# Fake Commands\n@docs stub, dummy, expectDummy, fail\n\n# Override a Command\n@docs override, batchOverride, use\n\n# Defer a Command\n@docs defer, resolveDeferred\n\n# Send a Fake Command\n@docs send\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "batchOverride",
+        "comment": " Combine a List of PlatformOverrides into a single override.\n",
+        "type": "List Elmer.PlatformOverride -> Elmer.PlatformOverride"
+      },
+      {
+        "name": "defer",
+        "comment": " Defer a command for later processing.\n\nYou might want to describe the behavior that occurs after a command\nin sent but before its effect is processed -- for example, the component could\nindicate that network activity is occurring while waiting for a request to complete.\n\nWhen a deferred command is processed, any effect associated with that command will *not* be sent\nto he component's `update` function until `resolveDeferred` is called.\n",
+        "type": "Platform.Cmd.Cmd msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "dummy",
+        "comment": " Generate a dummy command.\n\nYou might only care to describe the fact that a command has been sent, and not\nthe behavior that may result from its effect. In that case, use a dummy command.\n\nWhen this command is processed, the fact that it occured will be\nrecorded; no message will be passed to the component's `update` function.\nThis will be most useful in conjunction with `expectDummy`.\n",
+        "type": "String -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "expectDummy",
+        "comment": " Expect that a dummy command with the given identifier has been sent.\n",
+        "type": "String -> Elmer.Matcher (Elmer.ComponentState model msg)"
+      },
+      {
+        "name": "fail",
+        "comment": " Generate a command that will cause the test to fail with the specified message.\n",
+        "type": "String -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "override",
+        "comment": " Override a function that generates a command.\n\nThe first argument is a function that simply returns the function you want to\noverride. The second argument is a function with the same signature as the function\nto override. It should return one of the fake commands described above, so that\nElmer will know what to do.\n\nNote: This function merely creates a description of the override; the function\nis not actually overridden until you call `Command.use`.\n\nYou could override `Task.perform` with a stubbed command that tags some data like so:\n\n    override (\\_ -> Task.perform) (\\tagger task ->\n      stub (tagger \"some data\")\n    )\n\n",
+        "type": "(() -> a) -> (b -> c) -> Elmer.PlatformOverride"
+      },
+      {
+        "name": "resolveDeferred",
+        "comment": " Resolve any deferred commands.\n\nOnce this function is called, all messages associated with deferred commands will be\nsent to the component's `update` function.\n",
+        "type": "Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "send",
+        "comment": " Send a command.\n\nUse this function to send a command to your component. Any effect associated with this\ncommand will be processed accordingly. Elmer only knows how to process the fake commands\ndescribed above.\n",
+        "type": "Platform.Cmd.Cmd msg -> Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "stub",
+        "comment": " Generate a command that returns a message.\n\nWhen this command is processed, the message will be passed\nto the component's `update` function.\n",
+        "type": "msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "use",
+        "comment": " Use command overrides during a segment of your test.\n\nSuppose your component contains a button that,\nwhen clicked, issues a command to get the current date and updates the view. To\nget the current date, in your code you'll need to create a `Task` with `Date.now` and then\ngenerate a command with `Task.perform`. To describe this behavior in your test\n, you could do something like the following:\n\n    let\n      taskOverride = override (\\_ -> Task.perform) (\\tagger task ->\n        stub (tagger (toDate \"11/12/2016 5:30 pm\"))\n      )\n    in\n      componentState\n        |> find \"#get-date\"\n        |> use [ taskOverride ] click\n        |> find \"#current-date\"\n        |> expectElement (hasText \"11/12/2016 5:30 pm\")\n\n",
+        "type": "List Elmer.PlatformOverride -> (Elmer.ComponentState model msg -> Elmer.ComponentState model msg) -> Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Html",
+    "comment": " Functions for working with the `Html msg` generated by a view function.\n\n# Finding elements\n@docs HtmlElement, find, findChildren\n\n# General expectations\n@docs expectElement, expectElementExists\n\n",
+    "aliases": [
+      {
+        "name": "HtmlElement",
+        "comment": " Represents an Html element.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Elmer.Html.Types.HtmlElement msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "expectElement",
+        "comment": " Make expectations about the targeted element.\n\n    find \".my-class\" componentState\n      |> expectElement (\\element ->\n        Elmer.Html.Matchers.hasText \"some text\" element\n      )\n\n",
+        "type": "Elmer.Matcher (Elmer.Html.HtmlElement msg) -> Elmer.Matcher (Elmer.ComponentState model msg)"
+      },
+      {
+        "name": "expectElementExists",
+        "comment": " Expect that the targeted element exists.\n",
+        "type": "Elmer.Matcher (Elmer.ComponentState model msg)"
+      },
+      {
+        "name": "find",
+        "comment": " Target the first element matching the selector within the Html\nproduced by the component's `view` function. This is the most common\nway to find an element during a test.\n\nFind an element by class:\n\n    find \".some-class-name\"\n\nFind an element by id:\n\n    find \"#some-id\"\n\nFind an element by Html tag:\n\n    find \"div\"\n\nFind an element by Html tag having attribute:\n\n    find \"div[data-my-attr]\"\n\nFind an element by Html tag having attribute with value:\n\n    find \"div[data-my-attr='my-value']\"\n\nFind an element having an attribute:\n\n    find \"[data-my-attr]\"\n\nFind an element with an attribute and value:\n\n    find \"[data-my-attr='my-value']\"\n\n",
+        "type": "String -> Elmer.ComponentState model msg -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "findChildren",
+        "comment": " Find the descendents of an element that match the given selector string.\nYou can use the same syntax for the selector string as you would with the\n`find` function.\n\nFor example, you could expect that a list has a certain number of items:\n\n    componentState\n      |> find \"ul\"\n      |> expectElement (\\element ->\n        findChildren \"li\" element\n          |> List.count\n          |> Expect.equal 3\n      )\n",
+        "type": "String -> Elmer.Html.HtmlElement msg -> List (Elmer.Html.HtmlElement msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer.Http.Status",
+    "comment": " Functions for working with Http status codes.\n\n# General\n@docs HttpStatus, httpStatus\n\n# Common Status Codes\n@docs ok, created, unauthorized, forbidden, notFound, serverError\n\n",
+    "aliases": [
+      {
+        "name": "HttpStatus",
+        "comment": " Represents the status of an Http response\n",
+        "args": [],
+        "type": "Elmer.Http.Internal.HttpStatus"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "created",
+        "comment": " The `201 Created` Http status.\n",
+        "type": "Elmer.Http.Status.HttpStatus"
+      },
+      {
+        "name": "forbidden",
+        "comment": " The `403 Forbidden` Http status.\n",
+        "type": "Elmer.Http.Status.HttpStatus"
+      },
+      {
+        "name": "httpStatus",
+        "comment": " Generate an `HttpStatus`.\n",
+        "type": "Int -> String -> Elmer.Http.Status.HttpStatus"
+      },
+      {
+        "name": "notFound",
+        "comment": " The `404 Not Found` Http status.\n",
+        "type": "Elmer.Http.Status.HttpStatus"
+      },
+      {
+        "name": "ok",
+        "comment": " The `200 OK` Http status.\n",
+        "type": "Elmer.Http.Status.HttpStatus"
+      },
+      {
+        "name": "serverError",
+        "comment": " The `500 Internal Server Error` Http status.\n",
+        "type": "Elmer.Http.Status.HttpStatus"
+      },
+      {
+        "name": "unauthorized",
+        "comment": " The `401 Unauthorized` Http status.\n",
+        "type": "Elmer.Http.Status.HttpStatus"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmer",
+    "comment": " Basic types and functions for working with ComponentStates and Matchers\n\n# Working with ComponentStates\n@docs ComponentState, componentState\n\n# Working with Matchers\n@docs Matcher, (<&&>), expectNot\n\n# Working with Overrides\n@docs PlatformOverride\n\n",
+    "aliases": [
+      {
+        "name": "ComponentState",
+        "comment": " Represents the current state of the component under test.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "Elmer.Internal.ComponentState model msg"
+      },
+      {
+        "name": "Matcher",
+        "comment": " Generic type for functions that pass or fail.\n\nA matcher returns an `Expect.Expectation` from the\n[elm-test](http://package.elm-lang.org/packages/elm-community/elm-test/latest)\npackage.\n",
+        "args": [
+          "a"
+        ],
+        "type": "a -> Expect.Expectation"
+      },
+      {
+        "name": "PlatformOverride",
+        "comment": " Represents a request to override a platform function.\n\nSee `Elmer.Platform.Command.override` and `Elmer.Platform.Subscription.override` for examples.\n",
+        "args": [],
+        "type": "Elmer.Platform.PlatformOverride"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "<&&>",
+        "comment": " Operator for conjoining matchers.\nIf one fails, then the conjoined matcher fails, otherwise it passes.\n\n    Elmer.Html.expectElement (\n      Elmer.Html.Matchers.hasText \"Awesome\" <&&>\n      Elmer.Html.Matchers.hasClass \"cool\"\n    ) componentState\n",
+        "type": "Elmer.Matcher a -> Elmer.Matcher a -> Elmer.Matcher a"
+      },
+      {
+        "name": "componentState",
+        "comment": " Basic constructor for a `ComponentState`.\n",
+        "type": "model -> (model -> Html.Html msg) -> (msg -> model -> ( model, Platform.Cmd.Cmd msg )) -> Elmer.ComponentState model msg"
+      },
+      {
+        "name": "expectNot",
+        "comment": " Expect that a matcher fails.\n",
+        "type": "Elmer.Matcher a -> Elmer.Matcher a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
