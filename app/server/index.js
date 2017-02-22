@@ -1,17 +1,39 @@
 var express = require('express');
 var app = express();
+var ua = require('universal-analytics');
 const pathUtil = require('path');
 
 module.exports = function (elmer_versions) {
 
+  var sendAnalyticsEvent = function (category, action, label) {
+    var visitor = ua('UA-92414229-1');
+    visitor.event(category, action, label).send();
+  }
+
+  var sendPageView = function (path) {
+    var visitor = ua('UA-92414229-1');
+    visitor.pageview(path).send();
+  }
+
+  var staticPagePath = function(fullPath) {
+    var delim = "/public";
+    var start = fullPath.indexOf(delim)
+    return fullPath.substr(start + delim.length);
+  }
+
   app.use(express.static('public', { setHeaders: function (res, path, stat) {
       if (pathUtil.extname(path) == '') {
-        res.set('Content-Type', 'text/html');        
+        sendPageView(staticPagePath(path));
+        res.set('Content-Type', 'text/html');
+      } else if (pathUtil.extname(path) == '.gz') {
+        sendAnalyticsEvent("Download", pathUtil.basename(path));
       }
     }
   }));
 
   app.get('/description', function (req, res, next) {
+    sendAnalyticsEvent("Install", "description", `${req.query.name}/${req.query.version}`);
+
     if (req.query.name == "brian-watkins/elmer" && req.query.version) {
       res.redirect(`/versions/${req.query.version}/elm-package.json`);
     } else {
