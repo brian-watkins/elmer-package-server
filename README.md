@@ -27,3 +27,17 @@ $ ./scripts/makeLinux.sh
 $ ./scripts/makeMacOS.sh
 $ ./scripts/deployBin.sh
 ```
+
+### Deploy
+
+```
+$ cd app
+$ cf push
+```
+
+or try a blue-green deploy ...
+
+```
+$ cd app
+$ cf zero-downtime-deploy elmer-package-server -f ./manifest.yml
+```
