@@ -39,5 +39,5 @@ or try a blue-green deploy ...
 
 ```
 $ cd app
-$ cf zero-downtime-deploy elmer-package-server -f ./manifest.yml
+$ cf zero-downtime-push elmer-package-server -f ./manifest.yml
 ```
