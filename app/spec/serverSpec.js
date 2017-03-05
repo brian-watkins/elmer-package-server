@@ -76,4 +76,14 @@ describe('GET /description', function() {
     });
   });
 
+  describe('GET /packages/brian-watkins/elmer/latest', function() {
+    it('redirects to the latest version of the docs', function(done) {
+      request(app)
+        .get('/packages/brian-watkins/elmer/latest')
+        .expect(302)
+        .expect('Location', '/packages/brian-watkins/elmer/2.0.0')
+        .end(resolve(done));
+    })
+  });
+
 });

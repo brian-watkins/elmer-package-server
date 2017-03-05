@@ -3,6 +3,7 @@ var app = express();
 var ua = require('universal-analytics');
 var cookieSession = require('cookie-session');
 const pathUtil = require('path');
+const _ = require('underscore');
 
 module.exports = function (elmer_versions) {
 
@@ -45,6 +46,11 @@ module.exports = function (elmer_versions) {
       }
     }
   }));
+
+  app.get('/packages/brian-watkins/elmer/latest', function(req, res, next) {
+    var latest = _.last(elmer_versions[0].versions)
+    res.redirect(`/packages/brian-watkins/elmer/${latest}`);
+  });
 
   app.get('/description', function (req, res, next) {
     sendAnalyticsEvent(req, "Install", `${req.query.name}/${req.query.version}`);
