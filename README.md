@@ -30,6 +30,8 @@ $ ./scripts/deployBin.sh
 
 ### Deploy
 
+Make sure you're targeting the correct PCF instance, org, and space.
+
 ```
 $ cd app
 $ cf push
@@ -41,3 +43,16 @@ or try a blue-green deploy ...
 $ cd app
 $ cf zero-downtime-push elmer-package-server -f ./manifest.yml
 ```
+
+### Release a new version
+
+1. Bump the version in `elmer/elm-package.json`
+2. Tag a release:
+    ```
+    git tag -a '2.0.0' -m 'Awesome release'
+    git push --tags
+    ```
+2. Make the docs
+3. Add a directory and `elm-package.json` to `app/public/versions`
+4. Update `app/app.js` to include the new version
+5. Deploy to PCF
