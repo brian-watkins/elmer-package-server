@@ -53,6 +53,7 @@ $ cf zero-downtime-push elmer-package-server -f ./manifest.yml
     git push --tags
     ```
 2. Make the docs
-3. Add a directory and `elm-package.json` to `app/public/versions`
-4. Update `app/app.js` to include the new version
-5. Deploy to PCF
+3. Update `app/public/index.html` to add a link to the new documentation
+4. Add a directory and `elm-package.json` to `app/public/versions`
+5. Update `app/app.js` to include the new version
+6. Deploy to PCF
