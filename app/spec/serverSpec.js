@@ -14,8 +14,6 @@ const fake_elmer_versions = [
   }
 ];
 
-var app = server(fake_elmer_versions);
-
 var resolve = function(done, handler) {
   return function(err, res) {
 
@@ -31,36 +29,56 @@ var resolve = function(done, handler) {
   }
 }
 
-describe('GET /description', function() {
+let app
 
-  describe('when the name is invalid', function() {
-    it('returns 404', function(done) {
-      request(app)
-        .get('/description?name=blah')
-        .expect(404)
-        .end(resolve(done));
-    });
-  });
+describe('server', function () {
 
-  describe('when the name is valid', function() {
+  beforeEach(function() {
+    let fake_ua = jasmine.createSpyObj('fake-ua', [ 'middleware' ])
+    fake_ua.middleware.and.callFake(function () {
+      return function(req, res, done) {
+        req.visitor = {
+          event: function () { return { send: function () {} }},
+          pageview: function () { return { send: function () {} }},
+        }
+        done()
+      }
+    })
+    app = server(fake_elmer_versions, fake_ua);
+  })
 
-    describe('when the version is missing', function() {
+  describe('GET /description', function() {
+
+    describe('when the name is invalid', function() {
       it('returns 404', function(done) {
         request(app)
-          .get('/description?name=brian-watkins/elmer')
+          .get('/description?name=blah')
           .expect(404)
           .end(resolve(done));
       });
-    })
+    });
 
-    describe('when the version is given', function () {
-      it('redirects to the proper description', function(done) {
-        request(app)
-          .get('/description?name=brian-watkins/elmer&version=9.0.2')
-          .expect(302)
-          .expect('Location', '/versions/9.0.2/elm-package.json')
-          .end(resolve(done));
+    describe('when the name is valid', function() {
+
+      describe('when the version is missing', function() {
+        it('returns 404', function(done) {
+          request(app)
+            .get('/description?name=brian-watkins/elmer')
+            .expect(404)
+            .end(resolve(done));
+        });
+      })
+
+      describe('when the version is given', function () {
+        it('redirects to the proper description', function(done) {
+          request(app)
+            .get('/description?name=brian-watkins/elmer&version=9.0.2')
+            .expect(302)
+            .expect('Location', '/versions/9.0.2/elm-package.json')
+            .end(resolve(done));
+        });
       });
+
     });
 
   });
@@ -85,5 +103,4 @@ describe('GET /description', function() {
         .end(resolve(done));
     })
   });
-
-});
+})

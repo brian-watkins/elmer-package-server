@@ -1,5 +1,6 @@
 'use strict';
 
+var ua = require('universal-analytics');
 var server = require('./server');
 var port = process.env.PORT || 9000;
 
@@ -17,7 +18,7 @@ const elmer_versions = [
   }
 ];
 
-var app = server(elmer_versions);
+var app = server(elmer_versions, ua);
 
 app.listen(port, function () {
   console.log('Elmer Package Server running on port %d', port);

@@ -5,7 +5,7 @@
 To run the tests:
 
 ```
-$ node test
+$ npm test
 ```
 
 
