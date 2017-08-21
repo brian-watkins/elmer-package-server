@@ -21,13 +21,13 @@
 <p>Behavior-driven development for Elm Html apps.</p>
 
 <p>
-To accomplish its magic, elmer needs to run native Javascript code. For this reason,
-it's currently not possible to install elmer via <a href="http://package.elm-lang.org">package.elm-lang.org</a>.
-Nevertheless, you can install elmer by following the steps below. Enjoy!
+See the <a href="/packages/brian-watkins/elmer/latest">documentation</a> for lots more information.
 </p>
 
 <p>
-See the <a href="/packages/brian-watkins/elmer/latest">docs</a> for lots more information.
+To accomplish its magic, Elmer needs to run native Javascript code. For this reason,
+it's currently not possible to install Elmer via <a href="http://package.elm-lang.org">package.elm-lang.org</a>.
+Nevertheless, you can install Elmer by following the steps below. Enjoy!
 </p>
 
 <br />
@@ -36,32 +36,24 @@ See the <a href="/packages/brian-watkins/elmer/latest">docs</a> for lots more in
   <b>Getting Started</b>
   <ol>
     <li>Install <a href="http://package.elm-lang.org/packages/elm-community/elm-test/latest">elm-test</a>.
-      <pre>npm install -g elm-test</pre>
-      Note: elmer 3.0.0 requires elm-test version 4.1.0 or greater.
+      <pre>npm install -g elm-test@0.18.7</pre>
+      Note: elmer 3.0.0 requires elm-test version 4.1.0 or greater. Elmer has been tested with version
+      0.18.7 of the elm-test node-test-runner.  
     </li>
-    <li>Download elmer-package (see below), unzip it, and place it in your path.</li>
+    <li>Install <a href="https://github.com/gdotdesign/elm-github-install">elm-github-install</a></li>
     <li>In your elm project directory, run: <pre>elm test init</pre></li>
-    <li>Run: <pre>cd tests; elmer-package install brian-watkins/elmer</pre></li>
+    <li>Go into the tests directory and edit elm-package.json to add the dependency for elmer:
+      <pre>
+"dependencies": {
+  "brian-watkins/elmer": "3.0.0 <= v < 4.0.0",
+  ...
+}
+      </pre>
+    <li>In the tests directory, run: <pre>elm-install</pre></li>
   </ol>
   Now, use elm-test like normal. Any time you need to update or install new test packages, go to your tests directory
-  and run: <pre>elmer-package install</pre>
+  and run: <pre>elm-install</pre>
 </p>
-
-<br />
-
-<p>
-<b>Download elmer-package</b>
-<ul>
-<li>
-  <a href="/downloads/elmer-package-0.1-darwin.tar.gz">MacOS Sierra (10.12)</a>
-</li>
-<li>
-  <a href="/downloads/elmer-package-0.1-linux.tar.gz">Ubuntu Trusty Tahr (14.04)</a>
-</li>
-</ul>
-</p>
-
-<br />
 
 <p>
   <b>Documentation</b>
