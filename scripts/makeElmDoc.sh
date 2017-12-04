@@ -17,7 +17,7 @@ pushd elm-doc
 
 ./bin/elm-doc ${ELMER_DIR} \
   --output docs \
-  --exclude 'Elmer.Context,Elmer.TestState,Elmer.Http.Internal,Elmer.Printer,Elmer.Navigation.Location,Elmer.Html.Types,Elmer.Html.Query,Elmer.Internal,Elmer.Runtime,Elmer.Platform.Internal,Elmer.Http.Server,Elmer.Html.Internal,Elmer.Spy.Internal' \
+  --exclude 'Elmer.Context,Elmer.TestState,Elmer.Http.Internal,Elmer.Printer,Elmer.Navigation.Location,Elmer.Html.Types,Elmer.Html.Query,Elmer.Html.Event.Types,Elmer.Html.Event.HandlerQuery,Elmer.Html.Event.Description,Elmer.Html.Event.Processor,Elmer.Internal,Elmer.Runtime,Elmer.Runtime.Intention,Elmer.Runtime.Types,Elmer.Runtime.Command,Elmer.Headless.Internal,Elmer.Platform.Internal,Elmer.Http.Server,Elmer.Html.Internal,Elmer.Spy.Internal' \
   --elm-make /usr/local/bin/elm-make
 
 popd
